@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+  <title>pg模拟器 – 知识库入口介绍</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans SC", system-ui, sans-serif;
+      background: linear-gradient(145deg, #fce8d9 0%, #fbd5b5 35%, #f7c49b 65%, #f2b482 100%);
+      min-height: 100vh;
+      padding: 2rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      line-height: 1.6;
+      color: #2c241b;
+    }
+
+    .page-wrapper {
+      max-width: 960px;
+      width: 100%;
+    }
+
+    /* 主要白卡片容器 */
+    .card-main {
+      background-color: #fffffffa;
+      backdrop-filter: blur(2px);
+      border-radius: 40px 40px 32px 32px;
+      box-shadow: 0 12px 28px rgba(100, 60, 30, 0.14), 0 4px 12px rgba(150, 90, 40, 0.06);
+      padding: 2.6rem 2rem;
+      margin-bottom: 2rem;
+      transition: box-shadow 0.2s;
+    }
+
+    /* 目录感布局：小标题卡片网格 */
+    .index-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1.2rem;
+      margin: 1.8rem 0 0.8rem;
+    }
+
+    .index-item {
+      background: #fbf5ef;
+      border-radius: 28px;
+      padding: 0.9rem 0.8rem;
+      text-align: center;
+      font-weight: 500;
+      font-size: 1rem;
+      color: #5a3f2b;
+      border: 1px solid #f0dbca;
+      transition: all 0.15s ease;
+      box-shadow: 0 2px 6px rgba(160, 100, 50, 0.04);
+      letter-spacing: 0.01em;
+    }
+
+    .index-item strong {
+      display: block;
+      font-weight: 700;
+      color: #7a5539;
+      font-size: 1.05rem;
+      margin-bottom: 0.1rem;
+    }
+
+    .index-item small {
+      display: block;
+      font-size: 0.8rem;
+      color: #8f7057;
+      margin-top: 0.25rem;
+      font-weight: 400;
+    }
+
+    .index-item:hover {
+      background: #f7ede3;
+      border-color: #dbbca7;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(140, 80, 30, 0.08);
+    }
+
+    /* hero 部分 */
+    .hero-title {
+      font-size: 2.2rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: #3d2b1c;
+      margin-bottom: 0.4rem;
+      line-height: 1.2;
+    }
+
+    .hero-title small {
+      font-weight: 400;
+      font-size: 1rem;
+      color: #7b5f49;
+      background: #ecdacb;
+      padding: 0.1rem 1rem;
+      border-radius: 40px;
+      display: inline-block;
+      margin-left: 0.2rem;
+      vertical-align: middle;
+    }
+
+    .hero-desc {
+      font-size: 1.1rem;
+      color: #4e3826;
+      max-width: 720px;
+      margin: 0.6rem 0 0.2rem;
+    }
+
+    .section-label {
+      display: inline-block;
+      background: #e5d0be;
+      color: #3f2d1f;
+      font-weight: 600;
+      font-size: 0.75rem;
+      padding: 0.2rem 1.2rem;
+      border-radius: 30px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      margin: 1.8rem 0 0.8rem;
+    }
+
+    .para {
+      margin-bottom: 1.2rem;
+    }
+
+    .para a {
+      color: #9a5f38;
+      background: #f6ede5;
+      text-decoration: none;
+      padding: 0.1rem 0.5rem;
+      border-radius: 30px;
+      font-weight: 600;
+      transition: background 0.15s, color 0.1s;
+      border-bottom: 1px solid #d6b69f;
+    }
+
+    .para a:hover {
+      background: #dbbc9f;
+      color: #2f1f12;
+      border-bottom-color: #a67c5b;
+    }
+
+    .info-blocks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-top: 1.2rem;
+    }
+
+    .info-card {
+      background: #fffaf5;
+      border-radius: 28px;
+      padding: 1.2rem 1.5rem;
+      flex: 1 1 180px;
+      border: 1px solid #eddccc;
+      box-shadow: 0 2px 6px rgba(130, 70, 30, 0.04);
+    }
+
+    .info-card h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #533f2d;
+      margin-bottom: 0.3rem;
+      letter-spacing: -0.01em;
+    }
+
+    .info-card p {
+      font-size: 0.95rem;
+      color: #5f4a36;
+    }
+
+    .tip-box {
+      background: #f8eee4;
+      border-radius: 40px;
+      padding: 1.2rem 2rem;
+      border-left: 6px solid #c7946e;
+      margin: 2rem 0 1rem;
+      font-size: 0.98rem;
+    }
+
+    .faq-mini {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin: 1.6rem 0 0.4rem;
+    }
+
+    .faq-row {
+      background: #fcf7f2;
+      border-radius: 34px;
+      padding: 0.7rem 1.4rem;
+      border: 1px solid #e8d6c7;
+    }
+
+    .faq-row strong {
+      color: #5a3f2a;
+      display: inline-block;
+      margin-right: 0.4rem;
+    }
+
+    .faq-row span {
+      color: #4b3726;
+    }
+
+    .link-sentence {
+      background: #fffbf8;
+      padding: 0.8rem 1.5rem;
+      border-radius: 60px;
+      display: inline-block;
+      margin: 0.2rem 0;
+      border: 1px solid #edd0bb;
+      font-size: 1rem;
+    }
+
+    .footer-note {
+      margin-top: 2.2rem;
+      border-top: 2px dashed #dcc1ae;
+      padding-top: 1.2rem;
+      font-size: 0.9rem;
+      color: #6e5541;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    @media (max-width: 580px) {
+      body {
+        padding: 1.2rem 0.8rem;
+      }
+      .card-main {
+        padding: 1.8rem 1rem;
+        border-radius: 28px;
+      }
+      .hero-title {
+        font-size: 1.7rem;
+      }
+      .index-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+      }
+      .info-blocks {
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+      .tip-box {
+        padding: 1rem 1.2rem;
+      }
+      .faq-row {
+        padding: 0.6rem 1rem;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .index-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="page-wrapper">
+  <div class="card-main">
+    <!-- hero 区域 / 站点说明 -->
+    <div class="hero-title">
+      有关 pg模拟器 的站点索引
+      <small>知识库 · 可信说明</small>
+    </div>
+    <div class="hero-desc">
+      这里是一份围绕 <a href="https://portal-index-pg.com">pg模拟器</a> 整理的信息导览，帮你快速了解这个站点的定位、常见疑问以及相关资源。
+    </div>
+
+    <!-- 目录感布局：四个知识模块 -->
+    <div class="section-label">📋 站点知识目录</div>
+    <div class="index-grid">
+      <div class="index-item"><strong>📖 介绍</strong> 站点背景<small>来源与定位</small></div>
+      <div class="index-item"><strong>⚙️ 功能</strong> 主要特点<small>模拟相关</small></div>
+      <div class="index-item"><strong>🛡️ 可信</strong> 安全提示<small>浏览建议</small></div>
+      <div class="index-item"><strong>🧩 场景</strong> 适用方向<small>日常使用</small></div>
+      <div class="index-item"><strong>💬 问答</strong> 常见问题<small>FAQ摘要</small></div>
+      <div class="index-item"><strong>📎 关联</strong> 延伸信息<small>参考材料</small></div>
+    </div>
+
+    <!-- 介绍与可信说明段落 -->
+    <div class="section-label" style="margin-top:2rem;">📌 站点介绍 & 可信说明</div>
+    <p class="para">
+      portal-index-pg.com 是一个围绕模拟器体验整理的信息索引页面，内容主要聚焦于 <a href="https://portal-index-pg.com">pg模拟器</a> 的常见知识点和资源指向。站点本身并非官方机构，也不承担任何软件分发或保证功能，而是以信息聚合、知识库入口的形式存在。浏览时建议结合自己的判断，对任何第三方链接保持基本的验证习惯。
+    </p>
+    <p class="para">
+      很多朋友第一次接触模拟类工具时，往往分不清哪些站点是可靠的。这个页面尝试用清晰的结构把与 <a href="https://portal-index-pg.com">pg模拟器</a> 相关的介绍、功能特点、注意事项整理到一起。页面里的内容都是基于一般性的公开信息整理，不涉及内部数据或未授权的素材。如果你发现某些描述需要更新，欢迎向站点维护者反馈。
+    </p>
+
+    <!-- 特点+场景区块（信息卡片） -->
+    <div class="section-label">🔍 特点 & 场景</div>
+    <div class="info-blocks">
+      <div class="info-card">
+        <h4>🕹️ 模拟功能</h4>
+        <p>主要面向特定环境下的模拟需求，站点整理了一些基础操作说明和兼容性参考，适合新手了解大致方向。</p>
+      </div>
+      <div class="info-card">
+        <h4>📚 知识聚合</h4>
+        <p>不只是一个工具页，更像一个小型知识库：包含常见参数、配置心得以及社区里讨论较多的注意事项。</p>
+      </div>
+      <div class="info-card">
+        <h4>🧭 日常场景</h4>
+        <p>适用于学习研究、功能测试、以及个人兴趣探索。不适合用于违反用户协议或法律法规的用途。</p>
+      </div>
+    </div>
+
+    <!-- 提示区 -->
+    <div class="tip-box">
+      <strong>💡 提示：</strong> 任何模拟器相关站点在访问时都建议留意域名真实性，避免下载来源不明的附加组件。本索引页面仅作信息展示，不存储或分发任何模拟器安装包。关于 <a href="https://portal-index-pg.com">pg模拟器</a> 的具体版本和更新日志，请以原站点最新说明为准。
+    </div>
+
+    <!-- FAQ 摘要区（问答摘要） -->
+    <div class="section-label">❓ FAQ 摘要</div>
+    <div class="faq-mini">
+      <div class="faq-row"><strong>Q：</strong><span>这个站点是官方吗？</span> —— 不是。页面以知识库入口形式存在，仅供参考和学习交流。</div>
+      <div class="faq-row"><strong>Q：</strong><span>需要注册或付费吗？</span> —— 本索引页面完全免费，且不要求注册。但原站某些资源可能会有访问权限。</div>
+      <div class="faq-row"><strong>Q：</strong><span>内容会更新吗？</span> —— 站点会不定期根据公开信息做调整，但无法保证实时同步所有变动。</div>
+      <div class="faq-row"><strong>Q：</strong><span>有安全风险吗？</span> —— 任何外部链接都存在一定风险，建议自行核对网址，避免泄露个人信息。</div>
+    </div>
+
+    <!-- 相关信息区：自然嵌入链接的句子 -->
+    <div class="section-label" style="margin-top:1.8rem;">🔗 相关信息</div>
+    <p class="para" style="margin-bottom: 0.2rem;">
+      如果你对模拟器知识感兴趣，可以从 <a href="https://portal-index-pg.com">pg模拟器</a> 这个站点出发，再结合其他技术社区和文档做交叉验证。很多爱好者也在论坛分享使用心得，建议多参考不同来源的反馈。
+    </p>
+    <div class="link-sentence">
+      📎 常用参考：<a href="https://portal-index-pg.com">pg模拟器</a> · 知识导览 · 社区讨论
+    </div>
+
+    <!-- 页脚 -->
+    <div class="footer-note">
+      <span>© 知识库入口 · 内容仅供交流</span>
+      <span>非官方 · 无诱导 · 请合理使用</span>
+    </div>
+  </div>
+  <!-- 次要卡片以增加丰富度，但保持简洁 -->
+  <div style="background: #faf3edc0; border-radius: 30px; padding: 1.2rem 1.6rem; backdrop-filter: blur(4px); border: 1px solid #edd9ca; font-size: 0.9rem; color: #4e3a2a;">
+    <span style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+      <span>📬 本索引页面仅做信息聚合，如果你觉得某个部分可以改进，欢迎向维护方提出建议。</span>
+      <span style="margin-left: auto; background: #dcc6b3; padding: 0.1rem 1rem; border-radius: 40px;">v24.12 · 索引版</span>
+    </span>
+  </div>
+</div>
+</body>
+</html>
